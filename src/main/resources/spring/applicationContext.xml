@@ -1,0 +1,66 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:jee="http://www.springframework.org/schema/jee"
+	xmlns:mybatis="http://mybatis.org/schema/mybatis-spring"
+	xsi:schemaLocation="
+		http://www.springframework.org/schema/beans
+		http://www.springframework.org/schema/beans/spring-beans.xsd
+
+		http://www.springframework.org/schema/tx
+		http://www.springframework.org/schema/tx/spring-tx.xsd
+
+		http://www.springframework.org/schema/context
+		http://www.springframework.org/schema/context/spring-context.xsd
+		
+		http://www.springframework.org/schema/jee
+		http://www.springframework.org/schema/jee/spring-jee-2.0.xsd
+		
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+		http://mybatis.org/schema/mybatis-spring http://mybatis.org/schema/mybatis-spring.xsd">
+		
+	
+	<jee:jndi-lookup id="scriptFolder" jndi-name="java:comp/env/scriptFolder"/>
+	<jee:jndi-lookup id="propertiesFile" jndi-name="java:comp/env/quartz/propertiesFile"/>
+	
+	
+	<!-- direttive per la lettura e creazione dei bean mediante annotazioni nel codice java -->
+	<context:component-scan base-package="it.maggioli.eldasoft" >
+		<context:include-filter type="regex" expression="\..*"/>
+	</context:component-scan>
+	
+	<context:annotation-config />
+
+	<bean id="dataSource" class="org.springframework.jndi.JndiObjectFactoryBean" scope="singleton">
+	    <property name="jndiName" value="java:comp/env/jdbc/DBScheduler" />
+	    <property name="resourceRef" value="true" />
+	</bean>	
+	
+	<tx:annotation-driven transaction-manager="transactionManager" />
+	
+    <bean id="transactionManager"
+          class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <property name="dataSource" ref="dataSource"/>
+    </bean>
+
+	<bean id="springAppContext" class="it.maggioli.eldasoft.dbscheduler.startup.SpringAppContext" />
+
+	<!-- =============== MyBATIS beans configuration ================== -->
+	
+	<!-- session factory MyBatis con indicazione del package contenente i bean con eventuali alias -->	
+	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+	    <property name="dataSource" ref="dataSource" />
+	    <property name="typeAliasesPackage" value="it.maggioli.eldasoft.dbscheduler.entity" />
+	</bean>
+
+	<!-- package in cui sono definite le interfacce dei mapper -->
+ 	<mybatis:scan base-package="it.maggioli.eldasoft.dbscheduler.dao" />
+
+	<!-- configurazione per Quartz -->
+	<bean id="quartzFactory" class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+		<property name="waitForJobsToCompleteOnShutdown" value="true" />		
+		<property name="configLocation" ref="propertiesFile"/>
+	</bean>
+
+</beans>

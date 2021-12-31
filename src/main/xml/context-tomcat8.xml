@@ -1,0 +1,72 @@
+<?xml version='1.0' encoding='utf-8'?>
+<Context path="/DBScheduler">
+
+	<!-- Livello di tracciatura log4j: INFO [default], DEBUG  -->
+	<Environment name="logging/level" value="${logging.level}" type="java.lang.String" override="false" />
+	
+	<!-- Formato di tracciatura log4j  -->
+	<Environment name="logging/pattern" value="${logging.pattern}" type="java.lang.String" override="false" />
+	
+	<!-- Area nel filesystem in cui risiedono i file xml per gli script delle attivita' -->
+	<Environment name="scriptFolder" value="${script.scriptFolder}" type="java.lang.String" override="false" />		
+	
+	<!-- Configurazione Quartz in cluster oppure nodo singolo. Valori ammessi: -->
+	<!-- quartz_ram.properties [default] -->
+	<!-- quartz_cluster.properties -->
+	<Environment name="quartz/propertiesFile" value="${quartz.propertiesFile}" type="java.lang.String" override="false" />
+
+	<!-- Connessione al DB -->
+	<Resource name="jdbc/DBScheduler" 
+		auth="Container" 
+		type="javax.sql.DataSource" 
+		driverClassName="${jndi.driverClassName}" 
+		url="${jndi.url}" 
+		username="${jndi.username}" 
+		password="${jndi.password}" 
+		defaultAutoCommit="false"
+		maxTotal="8" 
+		maxIdle="10" />
+
+	<!-- Connessione ORACLE -->
+	<!--
+	<Resource name="jdbc/DBScheduler" 
+		auth="Container" 
+		type="javax.sql.DataSource" 
+		driverClassName="oracle.jdbc.driver.OracleDriver" 
+		url="jdbc:oracle:thin:@localhost:1521:XE" 
+		username="DBScheduler" 
+		password="DBScheduler" 
+		defaultAutoCommit="false"
+		maxTotal="8" 
+		maxIdle="10" />
+	-->
+
+	<!-- Connessione SQL SERVER -->
+	<!--
+	<Resource name="jdbc/DBScheduler" 
+		auth="Container" 
+		type="javax.sql.DataSource" 
+		driverClassName="com.microsoft.sqlserver.jdbc.SQLServerDriver" 
+		url="jdbc:sqlserver://localhost:1433;databaseName=DBScheduler" 
+		username="DBScheduler" 
+		password="DBScheduler" 
+		defaultAutoCommit="false"
+		maxTotal="8" 
+		maxIdle="10" />
+	-->
+
+	<!-- Connessione POSTGRESQL -->
+	<!--
+	<Resource name="jdbc/DBScheduler" 
+		auth="Container" 
+		type="javax.sql.DataSource" 
+		driverClassName="org.postgresql.Driver" 
+		url="jdbc:postgresql://localhost:5432/DBScheduler" 
+		username="DBScheduler" 
+		password="DBScheduler" 
+		defaultAutoCommit="false"
+		maxTotal="8" 
+		maxIdle="10" />
+	-->
+
+</Context>

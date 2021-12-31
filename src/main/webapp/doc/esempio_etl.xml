@@ -1,0 +1,111 @@
+<etl>
+	<!-- P.U. 29/07/17  v.1
+		 SCOPO: importare i dati dalla vista MySQL VIEW_DURC alla tabella Oracle IMPDURC.
+				Per farlo vengono prima replicati i dati da MySQL in una tabella Oracle IMPDURC_GE,
+				poi caricati in IMPDURC solo per le imprese in join per codice fiscale/partita iva.
+				Potendo esseci in IMPR più imprese con lo stesso codice fiscale, la chiave viene ricalcolata.
+	-->
+
+
+	<description>Replica dati DURC dal database MySQL al database Oracle</description>
+
+
+	<!-- Connessioni ai database -->
+	<connection id="mysqlDurc" driver="com.mysql.jdbc.Driver" url="jdbc:mysql://localhost:3306/dbdurc" user="louser" password="lapassword" />
+	<connection id="oraclePGPL" driver="oracle.jdbc.driver.OracleDriver" url="jdbc:oracle:thin:@localhost:1521:XE" user="louser" password="lapassword" >
+					plsql=true
+					statement.separator=/
+					statement.separator.singleline=true
+					</connection>
+
+
+	<!-- creo la tabella di appoggio se già non esiste -->
+	<script connection-id="oraclePGPL">
+		DECLARE COL_COUNT NUMBER;
+		BEGIN
+		COL_COUNT := 0;
+		SELECT COUNT(1) INTO COL_COUNT from user_tables WHERE table_name= 'IMPDURC_GE';
+		IF COL_COUNT = 0 THEN
+			EXECUTE IMMEDIATE 'CREATE TABLE IMPDURC_GE (
+                                        ID NUMERIC(12) NOT NULL,
+                       	                CODIMP VARCHAR2(10),
+                               	        NPROTO VARCHAR2(50),
+                                       	DATRIC_T VARCHAR2(20),
+	                                DATSCA_T VARCHAR2(20),
+        	                        TIPESI_T VARCHAR2(50),
+                                        NOTDUR VARCHAR2(2000),
+                        	        NOMIMP VARCHAR2(255),
+                                        CFIMP VARCHAR2(16),
+				   primary key (ID))';
+			END IF;
+		END;
+		/
+	</script>
+
+	
+	<!-- Cancello i record della tabella impdurc_ge di destinazione -->
+	<script connection-id="oraclePGPL">
+		BEGIN
+		delete from impdurc_ge;
+		commit;
+		END;
+		/
+	</script>
+
+
+	<!-- Replico i dati da MySQL a Oracle -->
+        <query connection-id="mysqlDurc">
+        	<!-- seleziono i dati dei DURC dal DB MySQL -->
+		SELECT CFIMP, NOMIMP, ID, null as 'CODIMP', NPROTO, DATRIC_T, DATSCA_T, TIPESI_T, NOTDUR FROM view_durc;
+        
+			<!-- per ogni riga viene eseguito lo script -->
+	        	<script connection-id="oraclePGPL">
+	        		<!-- Insert delle righe su Oracle -->
+	        		INSERT INTO IMPDURC_GE(CFIMP,NOMIMP,ID,CODIMP,NPROTO,DATRIC_T,DATSCA_T,TIPESI_T,NOTDUR) values (?CFIMP,?NOMIMP,?ID,?CODIMP,?NPROTO,?DATRIC_T,?DATSCA_T,?TIPESI_T,?NOTDUR)
+		        </script>
+       	</query>
+
+
+	<!-- Carico i dati sulla tabella finale impdurc -->
+
+        <!-- Prima elimino i record della tabella impdurc di destinazione con ID negativo 
+	     NB: ho sostituito < con &lt; perchè altrimenti dava errori in interpretazione XML
+		 delete from impdurc where id &lt; 0; cossisponde a delete from impdurc where id < 0;
+		-->
+        <script connection-id="oraclePGPL">
+                BEGIN
+				delete from impdurc where id &lt; 0;
+                commit;
+                END;
+                /
+        </script>
+
+	<!-- carico i dati da impdurc_ge a impdurc in join su impr 
+	     nb: al posto del campo a.ID uso rownum perchè se in IMPR 
+		 ci sono più imprese con lo stesso CF ottengo dei duplicate key;
+		 Ho calcolato rownum * -1 in negativo per evitare di elimininare
+		 dati inseriti da interfaccia (anche se nel contesto del cliente 
+		 l'inserimento, cancellazione e modifica vanno bloccate da profilo.
+	-->
+        <script connection-id="oraclePGPL">
+		BEGIN
+		insert into IMPDURC 
+			select distinct 
+				cast(ROWNUM *-1 as NUMERIC(12)) as ID,
+				cast(i.CODIMP as VARCHAR2(10)) as CODIMP,
+				cast(substr(a.NPROTO,1,20) as VARCHAR2(20)) as NPROTO,
+				cast(TO_DATE(a.DATRIC_T, 'dd/mm/yyyy') as date) as DATRIC,
+				cast(TO_DATE(a.DATSCA_T, 'dd/mm/yyyy') as date) as DATSCA,
+				case when a.TIPESI_T='regolare'
+					then cast(1 as NUMBER(7))
+					else cast(2 as NUMBER(7))
+					end as TIPESI,
+				cast(substr(a.NOTDUR,1,20) as varchar(2000)) as NOTDUR
+			from 
+				IMPDURC_GE a 
+				join impr i on (i.cfimp=a.cfimp or  i.pivimp=a.cfimp);
+		END;
+		/
+	</script>
+	
+</etl>

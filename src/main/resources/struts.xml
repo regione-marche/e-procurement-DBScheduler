@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+"-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+"http://struts.apache.org/dtds/struts-2.0.dtd">
+
+<struts>
+
+	<constant name="struts.devMode" value="true" />
+	<constant name="struts.xwork.chaining.copyErrors" value="true"/>
+	<constant name="struts.xwork.chaining.copyFieldErrors" value="true"/>
+	<constant name="struts.xwork.chaining.copyMessages" value="true"/>
+	
+	<package name="script_sql" namespace="/do" extends="struts-default">
+	
+
+		
+		<!-- Action dei ScriptJob -->
+		<!-- Lista di tutti ScriptJob -->
+		<action 
+			name="ScriptJobList"
+			method="getScriptListJob"
+			class="scriptJobListAction"
+			>
+			<interceptor-ref name="defaultStack"/>
+			<result name="success">/WEB-INF/pages/lista_script_job.jsp</result>		
+		</action>
+		
+		<!-- Dettaglio di un ScriptJob -->
+		<action 
+			name="ScriptJobDettaglio"
+			method="getScriptJobEntityFromCodScript"
+			class="scriptJobDetailAction"
+			>
+			<interceptor-ref name="defaultStack"/>
+			<result name="success">/WEB-INF/pages/dettaglio_script_job.jsp</result>	
+			
+		</action>
+		<!-- Modifica di un ScriptJob -->
+		<action 
+			name="ScriptJobModifica"
+			method="updateScriptJobEntity"
+			class="scriptJobDetailAction"
+			>
+			<interceptor-ref name="defaultStack"/>
+			<result name="success" type="chain">ScriptJobList</result>
+			<result name="nofieldError" >/WEB-INF/pages/dettaglio_script_job.jsp</result> 
+		</action>
+		
+		<!-- Aggiunta di un ScriptJob -->
+		<action 
+			name="ScriptJobNuovo"
+			method="addScriptJobEntity"
+			class="scriptJobAddAction">
+			<interceptor-ref name="defaultStack"/>
+			<result name="success" type="chain">ScriptJobList</result>		
+			<result name="nofieldError" >/WEB-INF/pages/nuovo_script_job.jsp</result> 
+		</action>
+		<action name="ScriptJobNuovoEdit">
+			<interceptor-ref name="defaultStack"/>
+			<result >/WEB-INF/pages/nuovo_script_job.jsp</result>
+		</action>
+		
+		<!-- Action dei Schedule ScriptJob -->
+		<!-- Lista dei schedulazioni di uno ScriptJob -->
+		<action 
+			name="ScheduleScriptJobList"
+			method="getScheduleScriptJobList"
+			class="scheduleScriptJobListAction">
+			<interceptor-ref name="defaultStack"/>
+			<result name="success">/WEB-INF/pages/lista_schedule_script_job.jsp</result>
+		</action>
+		<!-- Modifica di una schedulazione di uno Script -->
+		<action 
+			name="ScheduleScriptJobDettaglio"
+			method="getScheduleScriptJobDettaglio"
+			class="scheduleScriptJobDetailAction">
+			<interceptor-ref name="defaultStack"/>
+			<result name="success" >/WEB-INF/pages/dettaglio_schedule_script_job.jsp </result>
+		</action>
+		
+		<action 
+			name="ScheduleScriptJobModifica"
+			method="updateScheduleScriptJob"
+			class="scheduleScriptJobDetailAction">
+			<interceptor-ref name="defaultStack"/>
+			<result name="success" type="chain">ScheduleScriptJobList</result>
+			<result name="cronExpressionError" >/WEB-INF/pages/dettaglio_schedule_script_job.jsp</result> 
+		</action>
+		
+		
+		<!-- Aggiunta di una nuova schedulazione -->
+		<action 
+			name="ScheduleScriptJobNuovo"
+			method="addScheduleScriptJob"
+			class="scheduleScriptJobAddAction">
+			<interceptor-ref name="defaultStack"/>
+			<result name="success" type="chain">ScheduleScriptJobList</result>	
+			<result name="cronExpressionError" >/WEB-INF/pages/nuovo_schedule_script_job.jsp</result>   
+			<!-- <result name="cronExpressionError" type="chain">ScheduleScriptJobList</result> --> 
+			<!-- <result name="cronExpressionError" type="chain">ScheduleScriptJobNuovoEdit</result> -->
+		</action>
+		
+		<action 
+			name="ScheduleScriptJobNuovoEdit"
+			method="editScheduleScriptJob"
+			class="scheduleScriptJobAddAction">
+			<interceptor-ref name="defaultStack"/>
+			<result name="success">  /WEB-INF/pages/nuovo_schedule_script_job.jsp</result>
+		</action>
+		
+
+		
+		<!-- Cancellazioone di una schedulazione -->
+		<action 
+			name="ScheduleScriptJobCancella"
+			method="deleteScheduleScriptJob"
+			class="scheduleScriptJobCancelAction">
+			<interceptor-ref name="defaultStack"/>
+			<result name="success" type="chain">ScheduleScriptJobList</result>	
+		</action>
+		
+		<!-- Cambio Stato di una Schedulazione -->
+		<action 
+			name="ScheduleScriptJobCambiaStato"
+			method="changeScheduleScriptJob"
+			class="scheduleScriptJobChangeStatusAction">
+			<interceptor-ref name="defaultStack"/>
+			<result name="success" type="chain">ScheduleScriptJobList</result>	
+		</action>
+		
+		<!-- Lista dei log a db -->
+		<action 
+			name="LogsScheduleScriptJob"
+			method="getLogListAll"
+			class="logsScheduleScriptJobListAction">
+			<interceptor-ref name="defaultStack"/>
+			<result name="success" >/WEB-INF/pages/log_list.jsp</result>		
+		</action>
+		<!-- Lista dei log a db Filtrata-->
+		<action 
+			name="LogsScheduleScriptJobFiltered"
+			method="getLogList"
+			class="logsScheduleScriptJobListAction">
+			<interceptor-ref name="defaultStack"/>
+			<result name="success" >/WEB-INF/pages/log_list.jsp</result>		
+		</action>
+		
+		
+		
+		<!-- Eseguzione di un singolo Script -->
+		<action 
+			name="StartSingleScript"
+			method="executeScript"
+			class="scriptDone"
+			>
+			<interceptor-ref name="defaultStack"/>
+			<result name="success" >/WEB-INF/pages/esito_singolo_script.jsp</result>	
+		</action>
+		
+
+		
+	</package>
+
+
+	
+
+</struts>

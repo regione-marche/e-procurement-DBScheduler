@@ -1,0 +1,188 @@
+html,
+button,
+input,
+select,
+textarea {
+	font-family: Verdana, sans-serif;
+}
+
+body {
+	color: #333;
+	background-color: #f2efe7;
+	font-family: Verdana, Helvetica, Arial, sans-serif;
+	font-size:0.875em;
+    font-weight: 300;
+    line-height: 1.8;
+	padding: 5px;
+	margin: 5px;
+	
+}
+
+a {
+	text-decoration:none;
+	font-size: 16px;
+	background-color:#e7e0d0;
+	color: #0D4375;
+}
+
+a:hover {
+	text-decoration:none;
+	font-size: 16px;
+	background-color:#0D4375;
+	color: #f2efe7;
+}
+
+table {
+	border: 0;
+	border-collapse: separate;
+	border-spacing: 2px;
+	color: #404040;
+	background-color:#e7e0d0
+}
+
+th {
+	border: 0;
+	background-color: #e7e0d0;
+	color: #333;
+	text-align: left;
+	text-transform: uppercase;
+	margin-left: 3px;
+	padding:2px;
+}
+
+td {
+	border: 0;
+	background-color: #f2efe7;
+	padding:2px;
+}
+
+header{
+	margin: 0px;
+	padding: 8px;
+	border: 0px;
+	height: auto!important;
+	height: 50px;
+	min-height: 50px;
+	min-width: 1000px!important;
+ 	width: 100%; 
+	position: relative;
+	background-color: #0D4375
+}
+
+
+footer {
+	margin: 0px;
+	padding: 8px;
+	border: 0px;
+	height: auto!important;
+	height: 30px;
+	min-height: 30px;
+	min-width: 1000px!important;
+ 	width: 100%; 
+	position: relative;
+	background-color: #0D4375;
+	margin-top: 200px;
+	color: #fff;
+}
+	
+
+nav{
+	background-color: #0D4375;
+	min-width: 1000px!important;
+ 	width: 100%; 
+	padding: 8px;
+}
+
+nav ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    background-color: #0D4375;
+
+
+}
+
+nav li {
+    float: left;
+}
+
+nav li  a{
+    display: block;
+    color: white;
+    text-align: center;
+    padding: 5px;
+    text-decoration: none;
+	background-color: #0D4375;
+}
+
+nav li  a:hover{
+	color: #0D4375;
+    background-color: #fff;
+}
+
+.data_input{
+	width: 60%;
+}
+
+.data_input input{
+	width: 360px;;
+}
+
+
+
+.data_input textarea{
+	width: 360px;
+	height: 150px;
+}
+
+.errors{
+	color: red;
+}
+
+.errorLabel label td{
+	color: red;
+	}
+
+.esito_ok{
+	color: green;
+}
+
+.esito_ko{
+	color: red;
+}
+
+.width_10 td th{
+	width: "10%";
+	}
+	
+.width_15 td th{
+	width: "15%";
+	}
+	
+.width_35 td th{
+	width: "35%";
+	}
+			
+	
+.width_20 td th{
+	width: "20%";
+	}	
+
+.width_30 td th{
+	width: "30%";
+	}
+
+.width_60 td th{
+	width: "60%";
+	}	
+	
+.code {
+	background: white;
+	font-family: "courier new", Verdana;
+	border-style: solid;
+    border-width: 2px;
+    margin: 8px;
+    padding: 3px;
+	}
+		

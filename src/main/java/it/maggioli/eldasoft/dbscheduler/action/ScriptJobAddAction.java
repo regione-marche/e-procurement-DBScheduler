@@ -2,8 +2,8 @@ package it.maggioli.eldasoft.dbscheduler.action;
 
 import it.maggioli.eldasoft.dbscheduler.bl.DBSchedulerManager;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -14,7 +14,7 @@ import com.opensymphony.xwork2.ActionSupport;
 @Scope("prototype")
 public class ScriptJobAddAction extends ActionSupport{
 	
-	private Logger logger = LogManager.getLogger(ScriptJobAddAction.class);
+	private Logger logger = LoggerFactory.getLogger(ScriptJobAddAction.class);
 	
 	private String target = SUCCESS;
 	

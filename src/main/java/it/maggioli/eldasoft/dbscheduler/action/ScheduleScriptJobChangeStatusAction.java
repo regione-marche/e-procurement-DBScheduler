@@ -4,12 +4,9 @@ import it.maggioli.eldasoft.dbscheduler.bl.DBSchedulerManager;
 import it.maggioli.eldasoft.dbscheduler.bl.ScriptSchedulerManager;
 import it.maggioli.eldasoft.dbscheduler.entity.TriggerScriptJobEntity;
 
-import java.text.ParseException;
-
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.quartz.CronExpression;
 import org.quartz.SchedulerException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -25,7 +22,7 @@ public class ScheduleScriptJobChangeStatusAction extends ActionSupport{
 	private String id;
 	private DBSchedulerManager dBSchedulerManager; 
 	private ScriptSchedulerManager scriptSchedulerManager;
-	private Logger logger = LogManager.getLogger(ScheduleScriptJobChangeStatusAction.class);
+	private Logger logger = LoggerFactory.getLogger(ScheduleScriptJobChangeStatusAction.class);
 	private String target;
 
 	@Autowired

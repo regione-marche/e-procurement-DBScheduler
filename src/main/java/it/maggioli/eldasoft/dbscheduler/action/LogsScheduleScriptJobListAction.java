@@ -11,8 +11,8 @@ import java.util.Date;
 import java.util.List;
 
 import org.apache.commons.validator.routines.CalendarValidator;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -23,7 +23,7 @@ import com.opensymphony.xwork2.ActionSupport;
 @Scope(value="prototype")
 public class LogsScheduleScriptJobListAction extends ActionSupport {
 	
-	private Logger logger = LogManager.getLogger(LogsScheduleScriptJobListAction.class);
+	private Logger logger = LoggerFactory.getLogger(LogsScheduleScriptJobListAction.class);
 	
 	private ArrayList<ScriptJobLogsEntity>  logs;
 	private DBSchedulerManager dBSchedulerManager;

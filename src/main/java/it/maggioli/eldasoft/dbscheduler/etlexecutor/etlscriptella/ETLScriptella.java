@@ -6,15 +6,15 @@ import it.maggioli.eldasoft.dbscheduler.etlexecutor.IEtlExecutor;
 import java.io.File;
 import java.net.URL;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import scriptella.execution.EtlExecutor;
 
 public class ETLScriptella implements IEtlExecutor {
 	
 	private String scriptFolder;
-	private Logger logger = LogManager.getLogger(ETLScriptella.class);
+	private Logger logger = LoggerFactory.getLogger(ETLScriptella.class);
 	
 	/**
 	 * Set del folder in cui i file xml risiedono

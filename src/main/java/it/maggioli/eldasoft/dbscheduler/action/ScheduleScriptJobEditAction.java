@@ -4,9 +4,8 @@ import it.maggioli.eldasoft.dbscheduler.bl.DBSchedulerManager;
 import it.maggioli.eldasoft.dbscheduler.bl.ScriptSchedulerManager;
 import it.maggioli.eldasoft.dbscheduler.entity.TriggerScriptJobEntity;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.quartz.CronExpression;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -18,7 +17,7 @@ import com.opensymphony.xwork2.ActionSupport;
 @Scope(value="prototype")
 public class ScheduleScriptJobEditAction extends ActionSupport{
 	
-	private Logger logger = LogManager.getLogger(ScheduleScriptJobAddAction.class);
+	private Logger logger = LoggerFactory.getLogger(ScheduleScriptJobAddAction.class);
 
 	private DBSchedulerManager dBSchedulerManager; 
 	private TriggerScriptJobEntity triggerScriptJobEntity;

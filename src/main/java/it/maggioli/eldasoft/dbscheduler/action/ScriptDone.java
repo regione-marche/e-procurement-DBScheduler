@@ -7,8 +7,8 @@ import it.maggioli.eldasoft.dbscheduler.etlexecutor.EsitoETLScript;
 
 import java.sql.Timestamp;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -19,7 +19,7 @@ import com.opensymphony.xwork2.ActionSupport;
 @Scope("prototype")
 public class ScriptDone extends ActionSupport{
 
-	private Logger logger = LogManager.getLogger(ScriptDone.class);
+	private Logger logger = LoggerFactory.getLogger(ScriptDone.class);
 	private ScriptSchedulerManager scriptSchedulerManager;
 	private DBSchedulerManager dBSchedulerManager;
 	private EsitoETLScript esito;

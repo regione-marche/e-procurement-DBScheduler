@@ -8,7 +8,11 @@ SET check_function_bodies = false;
 SET client_min_messages = warning;
 SET escape_string_warning = off;
 
-CREATE TABLE script_job
+CREATE OR REPLACE FUNCTION aggiornamento() 
+  RETURNS void AS
+$$
+BEGIN
+    CREATE TABLE script_job
 (
   descrizione character varying(2000),
   codscript character varying(25) NOT NULL,
@@ -32,13 +36,32 @@ CREATE SEQUENCE script_job_logs_seq;
 CREATE TABLE script_job_logs
 (
   id integer NOT NULL DEFAULT nextval('script_job_logs_seq'),
-  messaggio character varying(2000),
+  messaggio text,
   codscript character varying(25),
   triggercode character varying(25),
   data timestamp without time zone,
   esito integer,
   CONSTRAINT script_job_logs_pkey PRIMARY KEY (id)
 );
+
+IF NOT EXISTS (SELECT 1 FROM PG_TABLES WHERE UPPER(TABLENAME)='ELDAVER') THEN
+
+  CREATE TABLE eldaver (
+    codapp VARCHAR(10) not null,
+    numver VARCHAR(10),
+    datvet TIMESTAMP,
+    msg VARCHAR(2000),
+    primary key (CODAPP)
+  );
+
+END IF;
+END;
+$$
+LANGUAGE 'plpgsql' ;
+
+select * from aggiornamento();
+drop function aggiornamento();
+
 -- Thanks to Patrick Lightbody for submitting this...
 --
 -- In your Quartz properties file, you'll need to set 
@@ -226,3 +249,4 @@ create index idx_qrtz_ft_tg on qrtz_fired_triggers(SCHED_NAME,TRIGGER_GROUP);
 
 
 --commit;
+INSERT INTO ELDAVER (CODAPP, NUMVER, DATVET, MSG) VALUES ('DBSC', '1.4.0', NULL , NULL);

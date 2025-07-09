@@ -9,12 +9,9 @@ import it.maggioli.eldasoft.dbscheduler.startup.SpringAppContext;
 import java.net.URL;
 import java.sql.Timestamp;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.quartz.Job;
-import org.quartz.JobExecutionContext;
-import org.quartz.JobExecutionException;
-import org.quartz.SchedulerException;
+import org.quartz.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
@@ -27,7 +24,7 @@ import org.springframework.web.context.support.WebApplicationContextUtils;
 public class JobEtl implements IEtlExecutor , Job {
 	
 	private String scriptFolder;
-	private Logger logger = LogManager.getLogger(JobEtl.class);
+	private Logger logger = LoggerFactory.getLogger(JobEtl.class);
 	private String scriptFilename;	
 
 
@@ -81,7 +78,7 @@ public class JobEtl implements IEtlExecutor , Job {
 			
 			// traccio l'esito nel log a db
 			dBSchedulerManager.addScriptJobLog(esito.getEsito(), messaggio, codscript, triggercode, now) ;
-			
+
 			logger.info("fine Job " + messaggio) ;	
 			
 		} catch (SchedulerException e) {

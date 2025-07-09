@@ -4,8 +4,8 @@ import it.maggioli.eldasoft.dbscheduler.bl.DBSchedulerManager;
 import it.maggioli.eldasoft.dbscheduler.bl.ScriptSchedulerManager;
 import it.maggioli.eldasoft.dbscheduler.entity.TriggerScriptJobEntity;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -21,7 +21,7 @@ public class ScheduleScriptJobCancelAction extends ActionSupport{
 	private String id;
 	private DBSchedulerManager dBSchedulerManager; 	
 	private ScriptSchedulerManager scriptSchedulerManager;
-	private Logger logger = LogManager.getLogger(ScheduleScriptJobCancelAction.class);
+	private Logger logger = LoggerFactory.getLogger(ScheduleScriptJobCancelAction.class);
 
 	@Autowired
 	public void setScriptSchedulerManager(

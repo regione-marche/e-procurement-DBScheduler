@@ -10,19 +10,11 @@ import it.maggioli.eldasoft.dbscheduler.quartz.JobEtl;
 import java.text.ParseException;
 import java.util.List;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.quartz.CronScheduleBuilder;
-import org.quartz.CronTrigger;
-import org.quartz.JobBuilder;
-import org.quartz.JobDetail;
-import org.quartz.JobKey;
-import org.quartz.Scheduler;
-import org.quartz.SchedulerException;
-import org.quartz.SimpleScheduleBuilder;
-import org.quartz.Trigger;
-import org.quartz.TriggerBuilder;
+import org.quartz.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Required;
 import org.springframework.context.annotation.Scope;
@@ -33,7 +25,7 @@ import org.springframework.stereotype.Component;
 @Scope("prototype")
 public class ScriptSchedulerManager {
 
-	private Logger logger = LogManager.getLogger(ScriptSchedulerManager.class);
+	private Logger logger = LoggerFactory.getLogger(ScriptSchedulerManager.class);
 	private DBSchedulerManager dBSchedulerManager;
 	private String scriptFolder;
 	private SchedulerFactoryBean quartzFactory;
@@ -91,7 +83,7 @@ public class ScriptSchedulerManager {
 
 	/**
 	 * Elimina un job dallo scheduler, lo script viene individuato attraverso il name e grupo
-	 * per il group è il codice script che è kp del db, montre per il mane è la concatenazione
+	 * per il group Ã¨ il codice script che Ã¨ kp del db, montre per il mane Ã¨ la concatenazione
 	 * del codscript e l'id del trigger che corrisponde alla pk del db
 	 *
 	 * @param triggerId id del trigger a db
@@ -117,7 +109,7 @@ public class ScriptSchedulerManager {
 	 */
 	public void addJobScheduleTrigger(TriggerScriptJobEntity triggerScriptJobEntity) throws SchedulerException {
 
-		String name = StringUtils.substring(triggerScriptJobEntity.getId() + "-" + triggerScriptJobEntity.getCodscript(), 0, 25);
+		String name = getSchedulerJobId(triggerScriptJobEntity.getId(), triggerScriptJobEntity.getCodscript());
 		String group = triggerScriptJobEntity.getCodscript() ;
 		ScriptJobEntity jobscript = dBSchedulerManager.getScriptJobEntity(triggerScriptJobEntity.getCodscript());
 		String filename = jobscript.getFilename();
@@ -182,7 +174,7 @@ public class ScriptSchedulerManager {
 				// come group utilizzo il codice identificativo dello script del db
 				// come nome lo stesso codice concatenato all'id (progressivo) della schedualzione a db
 				String group = tsjEntity.getCodscript();
-				String name = tsjEntity.getCodscript() + tsjEntity.getId();
+				String name = getSchedulerJobId(tsjEntity.getId(), tsjEntity.getCodscript());
 
 				logger.info("Creazione JobDetail e Trigger (group: " + group
 						+ " name: " + name + ")");
@@ -248,5 +240,22 @@ public class ScriptSchedulerManager {
 
 	}
 
+
+	public boolean isJobPresent(Integer idTrigger, String codscript) {
+		boolean toReturn = false;
+
+		try {
+			Scheduler scheduler = getScheduler();
+			toReturn = CollectionUtils.isNotEmpty(scheduler.getTriggersOfJob(new JobKey(getSchedulerJobId(idTrigger, codscript), codscript)));
+		} catch (Exception e) {
+			logger.error("Error: ", e);
+		}
+
+		return toReturn;
+	}
+
+	private String getSchedulerJobId(Integer idTrigger, String codscript) {
+		return StringUtils.substring(idTrigger + "-" + codscript, 0, 25);
+	}
 
 }

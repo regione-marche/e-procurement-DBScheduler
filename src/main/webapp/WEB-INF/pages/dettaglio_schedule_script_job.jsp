@@ -29,7 +29,7 @@
 
 		<s:hidden name="id" value="%{triggerScriptJobEntity.id}"  />
 		<s:hidden name="codscript" value="%{triggerScriptJobEntity.codscript}"  />
-		
+
 		<s:submit value="salva" name="submit" />	
 	
 	</s:form>
